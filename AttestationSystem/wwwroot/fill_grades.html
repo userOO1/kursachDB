@@ -36,8 +36,15 @@
                         <td>Константин</td>
                         <td>Олегович</td>
                         <td>
-                            <select name='grades[0].Subject' class='form-select' ><option value='БД'>БД</option></select></td><td><select name='grades[0].Semester' class='form-select' ><option value='1'>1</option><option value='2'>2</option><option value='3'>3</option><option value='4'>4</option><option value='5'>5</option><option value='6'>6</option><option value='7'>7</option><option value='8'>8</option></select></td><td><select name='grades[0].WorkType' class='form-select'><option value='Экзамен'>Экзамен</option><option value='Диференцированный зачет'>Диференцированный зачет</option><option value='зачет'>зачет</option></select></td><td>
-                        <input type='number' name='grades[0].Grade' class='form-control' min='1' max='5'>
+                            <select name='grades[0].Subject' class='form-select' ><option value='БД'>БД</option></select></td><td><select name='grades[0].Semester' class='form-select' ><option value='1'>1</option><option value='2'>2</option><option value='3'>3</option><option value='4'>4</option><option value='5'>5</option><option value='6'>6</option><option value='7'>7</option><option value='8'>8</option></select></td><td><select id='workTypeSelect' onchange='updateGradeOptions()' name='grades[0].WorkType' class='form-select'><option value='Экзамен'>Экзамен</option><option value='Диференцированный зачет'>Диференцированный зачет</option><option value='Зачет'>Зачет</option><option value='Курсовая работа'>Курсовая работа</option></select></td><td>
+                        <select  name='grades[0].Grade' class='form-select' >
+                            <option value='0'>Незачет</option>
+                            <option value='1'>Зачет</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                        </select>
                         </td>
                         <td>
                             <input type='date' name='grades[0].Date' class='form-control'>
@@ -47,5 +54,6 @@
         <button type='submit' class='btn btn-success'>Сохранить оценки</button>
     </form>
 </div>
+
 </body>
 </html>

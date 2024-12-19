@@ -13,27 +13,33 @@ namespace AttestationSystem.Controllers
             _context = context;
         }
 
-        // Главная страница преподавателя (список групп)
+        // Главная страница преподавателя 
         public IActionResult Index()
         {
+            var tabNumber = HttpContext.Session.GetInt32("UserTabNumber");
+            var teacher = _context.Преподавателиs
+                .FirstOrDefault(s => s.НомерСотрудника == tabNumber.Value);
             // Получаем список групп
-            var groups = _context.Группыs.ToList();
+            var departments = _context.Кафедрыs.ToList();
 
             // Формируем путь к HTML-файлу
-            var htmlFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "group_list.html");
+            var htmlFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "department_list.html");
 
             // Динамическое наполнение
-            string groupData = $@"<!DOCTYPE html>
+            string departmentData = $@"<!DOCTYPE html>
 <html lang='ru'>
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Список групп</title>
+    <title>Кафедры</title>
     <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css' rel='stylesheet'>
 </head>
 <body>
 <div class='container mt-4'>
-    <h3>Список групп</h3>
+<h3>Добро пожаловать, <span class='text-primary'>{teacher.Фамилия} {teacher.Имя} {teacher.Отчество}</span></h3>
+        <p><strong>Номер сотрудника:</strong> {teacher.НомерСотрудника}</p>
+        <p><strong>Кафедра:</strong> {teacher.КафедрыНазваниеКафедры}</p>
+    <h3>Кафедры</h3>
     <table class='table table-bordered'>
         <thead>
         <tr>
@@ -42,24 +48,70 @@ namespace AttestationSystem.Controllers
         </tr>
         </thead>
         <tbody>";
-            foreach (var group in groups)
+            foreach (var department in departments)
             {
-                groupData += $@"
+                departmentData += $@"
                     <tr>
-                        <td>{group.НомерГруппы}</td>
+                        <td>{department.НазваниеКафедры}</td>
                         <td>
-                            <a href='/Teacher/StudentList?groupNumber={group.НомерГруппы}' class='btn btn-primary'>Просмотреть студентов</a>
+                            <a href='/Teacher/GroupList?department={department.НазваниеКафедры}' class='btn btn-primary'>Просмотреть группы</a>
                         </td>
                     </tr>";
             }
-            groupData += "</tbody>\n    </table>\n</div>\n</body>\n</html>";
+            departmentData += "</tbody>\n    </table>\n</div>\n</body>\n</html>";
 
             
-            System.IO.File.WriteAllText(htmlFilePath, groupData);
+            System.IO.File.WriteAllText(htmlFilePath, departmentData);
 
-            return File("/group_list.html", "text/html");
+            return File("/department_list.html", "text/html");
         }
 
+        public IActionResult GroupList(string department)
+        {
+            var groups = _context.Группыs
+                .Where(s => s.КафедрыНазваниеКафедры == department)
+                .ToList();
+            // Формируем путь к HTML-файлу
+           var htmlFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "group_list.html");
+
+           // Динамическое наполнение
+           string groupData = $@"<!DOCTYPE html>
+<html lang='ru'>
+<head>
+   <meta charset='UTF-8'>
+   <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+   <title>Список групп</title>
+   <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css' rel='stylesheet'>
+</head>
+<body>
+<div class='container mt-4'>
+   <h3>Список групп</h3>
+   <table class='table table-bordered'>
+       <thead>
+       <tr>
+           <th>Номер группы</th>
+           <th>Действия</th>
+       </tr>
+       </thead>
+       <tbody>";
+           foreach (var group in groups)
+           {
+               groupData += $@"
+                   <tr>
+                       <td>{group.НомерГруппы}</td>
+                       <td>
+                           <a href='/Teacher/StudentList?groupNumber={group.НомерГруппы}' class='btn btn-primary'>Просмотреть студентов</a>
+                       </td>
+                   </tr>";
+           }
+           groupData += "</tbody>\n    </table>\n</div>\n</body>\n</html>";
+
+           
+           System.IO.File.WriteAllText(htmlFilePath, groupData);
+
+           return File("/group_list.html", "text/html");
+       }
+        
         // Список студентов в группе
         public IActionResult StudentList(string groupNumber)
         {
@@ -186,7 +238,7 @@ namespace AttestationSystem.Controllers
                 }
                 studentData += "</select></td><td>";
 
-                studentData += $@"<select name='grades[{index}].WorkType' class='form-select'>";
+                studentData += $@"<select id='workTypeSelect' onchange='updateGradeOptions()' name='grades[{index}].WorkType' class='form-select'>";
                 foreach (var workType in workTypes)
                 {
                     studentData += $"<option value='{workType.ВидРаботы}'>{workType.ВидРаботы}</option>";
@@ -194,7 +246,14 @@ namespace AttestationSystem.Controllers
                 studentData += "</select></td><td>";
 
                 studentData += $@"
-                        <input type='number' name='grades[{index}].Grade' class='form-control' min='1' max='5'>
+                        <select  name='grades[0].Grade' class='form-select' >
+                            <option value='0'>Незачет</option>
+                            <option value='1'>Зачет</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                        </select>
                         </td>
                         <td>
                             <input type='date' name='grades[{index}].Date' class='form-control'>
@@ -207,6 +266,7 @@ namespace AttestationSystem.Controllers
         <button type='submit' class='btn btn-success'>Сохранить оценки</button>
     </form>
 </div>
+
 </body>
 </html>";
 
@@ -240,6 +300,7 @@ namespace AttestationSystem.Controllers
             // Сохраняем оценки
             foreach (var grade in grades)
             {
+                
                 var newDate = new Даты
                 {
                     Дата = grade.Date
@@ -255,9 +316,10 @@ namespace AttestationSystem.Controllers
                     ПреподавателиНомерСотрудника = tabNumber,
                     СтудентыНомерСтуденческого = grade.TabStudent
                 };
+                
                 _context.Аттестацииs.Add(newGrade);
             }
-            
+
             _context.SaveChanges();
 
             return RedirectToAction("Index");

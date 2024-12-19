@@ -98,15 +98,26 @@ namespace AttestationSystem.Controllers
                     // Если есть аттестации, выводим их
                     if (grades.Any())
                     {
+                        
                         foreach (var grade in grades)
                         {
+                            string strGrade= grade.grade.Оценка.ToString();
+                            if (grade.grade.Оценка == 0)
+                            {
+                                strGrade = "Незачет";
+                            }
+                            if (grade.grade.Оценка == 1)
+                            {
+                                strGrade = "Зачет";
+                            }
+                            
                             studentData += $@"
                 <tr>
                     <td>{grade.grade.ПредметыНазваниеДисциплины}</td>
                     <td>{grade.grade.ДатыДата}</td>
                     <td>{grade.teacher.Фамилия} {grade.teacher.Имя} {grade.teacher.Отчество}</td>
                     <td>{grade.grade.ВидыРаботВидРаботы}</td>
-                    <td>{grade.grade.Оценка}</td>
+                    <td>{strGrade}</td>
                 </tr>";
                         }
                     }

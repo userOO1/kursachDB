@@ -42,7 +42,7 @@ public partial class AttestationContext : DbContext
             entity.HasKey(a => a.Id).HasName("Аттестации_pkey"); 
             entity.ToTable("Аттестации");
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd() 
                 .HasColumnName("id");
             entity.Property(e => e.ВидыРаботВидРаботы).HasColumnName("видыРабот_видРаботы");
             entity.Property(e => e.ДатыДата).HasColumnName("даты_дата");
@@ -93,6 +93,10 @@ public partial class AttestationContext : DbContext
             entity.ToTable("Группы");
 
             entity.Property(e => e.НомерГруппы).HasColumnName("номерГруппы");
+            entity.Property(e => e.КафедрыНазваниеКафедры).HasColumnName("кафедры_названиеКафедры");
+            entity.HasOne(d => d.КафедрыНазваниеКафедрыNavigation).WithMany(p => p.Группыs)
+                .HasForeignKey(d => d.КафедрыНазваниеКафедры)
+                .HasConstraintName("кафедры_FK");
         });
 
         modelBuilder.Entity<Даты>(entity =>
