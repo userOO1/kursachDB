@@ -39,10 +39,11 @@ public partial class AttestationContext : DbContext
     {
         modelBuilder.Entity<Аттестации>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("Аттестации");
-
+            entity.HasKey(a => a.Id).HasName("Аттестации_pkey"); 
+            entity.ToTable("Аттестации");
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
             entity.Property(e => e.ВидыРаботВидРаботы).HasColumnName("видыРабот_видРаботы");
             entity.Property(e => e.ДатыДата).HasColumnName("даты_дата");
             entity.Property(e => e.Оценка).HasColumnName("оценка");

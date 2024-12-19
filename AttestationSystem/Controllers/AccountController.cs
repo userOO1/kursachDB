@@ -51,7 +51,7 @@ namespace AttestationSystem.Controllers;
                 {
                     // Устанавливаем сессию или куки для преподавателя
                     HttpContext.Session.SetString("UserRole", "teacher");
-                    HttpContext.Session.SetString("UserTabNumber", teacher.НомерСотрудника.ToString());
+                    HttpContext.Session.SetInt32("UserTabNumber", teacher.НомерСотрудника);
                     return RedirectToAction("Index", "Teacher");  // Перенаправление на страницу преподавателя
                 }
                 return BadRequest("Неверный табельный номер или пароль.");

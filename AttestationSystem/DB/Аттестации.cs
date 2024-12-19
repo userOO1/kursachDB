@@ -5,6 +5,7 @@ namespace AttestationSystem;
 
 public partial class Аттестации
 {
+    public int Id { get; set; }
     public int? СтудентыНомерСтуденческого { get; set; }
 
     public DateOnly? ДатыДата { get; set; }

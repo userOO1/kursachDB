@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang='ru'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Проставление оценок</title>
+    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css' rel='stylesheet'>
+</head>
+<body>
+<div class='container mt-4'>
+    <h3>Проставление оценок для группы Б22-123-1</h3>
+    <form method='post' action='/Teacher/SubmitGrades'>
+        <input type='hidden' name='GroupNumber' value=Б22-123-1>
+        <table class='table table-bordered'>
+            <thead>
+            <tr>
+                <th>Номер студенческого</th>
+                <th>Фамилия</th>
+                <th>Имя</th>
+                <th>Отчество</th>
+                <th>Предмет</th>
+                <th>Семестр</th>
+                <th>Вид работы</th>
+                <th>Оценка</th>
+                <th>Дата</th>
+            </tr>
+            </thead>
+            <tbody>
+                    <tr>
+                        <td>
+                            <input type='hidden' name='grades[0].TabStudent' value=12345>
+                            12345
+                        </td>
+
+                        <td>Костенков</td>
+                        <td>Константин</td>
+                        <td>Олегович</td>
+                        <td>
+                            <select name='grades[0].Subject' class='form-select' ><option value='БД'>БД</option></select></td><td><select name='grades[0].Semester' class='form-select' ><option value='1'>1</option><option value='2'>2</option><option value='3'>3</option><option value='4'>4</option><option value='5'>5</option><option value='6'>6</option><option value='7'>7</option><option value='8'>8</option></select></td><td><select name='grades[0].WorkType' class='form-select'><option value='Экзамен'>Экзамен</option><option value='Диференцированный зачет'>Диференцированный зачет</option><option value='зачет'>зачет</option></select></td><td>
+                        <input type='number' name='grades[0].Grade' class='form-control' min='1' max='5'>
+                        </td>
+                        <td>
+                            <input type='date' name='grades[0].Date' class='form-control'>
+                        </td>
+                    </tr></tbody>
+        </table>
+        <button type='submit' class='btn btn-success'>Сохранить оценки</button>
+    </form>
+</div>
+</body>
+</html>
